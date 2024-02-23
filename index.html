@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <style>
+            * {
+                text-align: center;
+            }
+            #container {
+                height: auto;
+                width: 100%;
+                display: flex;
+                text-align: center;
+                justify-content: center;
+                align-items: center;
+                text-align: center;
+            }
+            .inner {
+                width: 70vw;
+                background-color: antiquewhite;
+                flex-direction: column;
+                padding: 40px;
+            }
+            ul {
+                padding: 0px;
+            }
+            li {
+                list-style: none;
+                text-align: center;
+                padding: 10px;
+                height: 20px;
+                width: auto;
+                margin-top: 10px;
+                margin-bottom: 10px;
+                background-color: gainsboro;
+            }
+            li:active {
+                background-color: brown;
+            }
+            .btn {
+                width: 49vw;
+                display: flex;
+                justify-content: center;
+                align-items: flex-start;
+                flex-direction: column;
+            }
+            button {
+                height: 40px;
+                width: 100px;
+                color: white;
+                background-color: cadetblue;
+                border-radius: 5px;
+            }
+            button:hover {
+                border-radius: 20px;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="container">
+            <div class="inner">
+                <div id="score">
+                    <h2 id="Score">Score : <span id="text"></span></h2>
+                </div>
+                <div id="quiz">
+                    <h2 style="text-align: center" id="Listhead"></h2>
+                    <ul style="text-align: center" id="List"></ul>
+                </div>
+                <div class="btn">
+                    <p id="demo"></p>
+                    <p id="wait"></p>
+                    <button id="submit">Submit</button>
+                </div>
+            </div>
+        </div>
+    </body>
+    <script>
+        const quiz = [
+            {
+                question: "What is capital of France?",
+                solution: ["Paris", "London", "Berlin", "Rome"],
+                b: "Paris",
+            },
+            {
+                question: "What is chemical symbol for water ?",
+                solution: ["H2O", "CO2", "O2", "Nacl"],
+                b: "H2O",
+            },
+            {
+                question: "Which instrument is used to measure wind speed ?",
+                solution: [
+                    "Anemometer",
+                    "seismometer",
+                    "Thermometer",
+                    "Ammeter",
+                ],
+                b: "Anemometer",
+            },
+            {
+                question: "What is the largest ocean in the world?",
+                solution: ["Atlantic", "Pacific", "Arctic", "Indian"],
+                b: "Pacific",
+            },
+            {
+                question: "What is the currency of Japan?",
+                solution: ["Yen", "Euro", "Dollar", "Rupee"],
+                b: "Yen",
+            },
+        ];
+        let score = 0;
+        let i = 0;
+        const list = document.getElementById("Listhead");
+        const list2 = document.getElementById("List");
+        const submit = document.getElementById("submit");
+        const para = document.getElementById("demo");
+        const scorer = document.getElementById("text");
+        const wait = document.getElementById("wait");
+        let v;
+        list2.innerHTML = "";
+        list.innerHTML = quiz[0].question;
+        quiz[0].solution.map((s) => {
+            const li = document.createElement("li");
+            li.textContent = s;
+            list2.appendChild(li);
+            li.addEventListener("click", () => {
+                event.target.style.backgroundColor = "brown";
+                event.target.style.color = "white";
+                v = li.textContent;
+            });
+        });
+
+        wait.innerHTML = "";
+
+        /*<!-- submit.addEventListener("click", () => {
+            var timer = 3;
+            let int = setInterval(function (a) {
+                timer--;
+
+                wait.innerHTML = `Please wait ${timer}s for next question`;
+                if (timer < 0) {
+                    wait.innerHTML = ''
+                    clearInterval(int);
+                }
+            }, 1000);
+        }); */
+        let int;
+        function clear() {
+            clearInterval(int);
+        }
+        submit.addEventListener("click", () => {
+            var timer = 4;
+            int = setInterval(function (a) {
+                timer--;
+
+                wait.innerHTML = `Please wait ${timer}s for next question`;
+                if (timer <= 0) {
+                    wait.innerHTML = "";
+                    clearInterval(int);
+                }
+            }, 700);
+
+            if (v === quiz[i].b) {
+                para.innerText = "Your Solution is Correct";
+                score++;
+                scorer.innerHTML = `${score}/5`;
+                if (i <= 3) {
+                    setTimeout(next, 3000);
+                }
+                if (i == 4) {
+                    list.innerHTML = `Your Final Score is  ${score}/5`;
+                    list2.innerHTML = "";
+                    para.innerHTML = "";
+                    wait.innerHTML = "";
+                    int = clear();
+                }
+                if (score == 5) {
+                    wait.innerHTML = "";
+                    int = clear();
+                    list2.innerHTML = "Congratulations  you Scored 5/5 🥇";
+                } else if (score < 5 && i == 4) {
+                    list2.innerHTML = `Nice try you Scored ${score}/5 `;
+                    list.innerHTML = `You may retake test by refreshing`;
+                }
+            } else {
+                para.innerText = "Your Solution is incorrect";
+                if (i <= 3) {
+                    setTimeout(next, 3000);
+                }
+                if (i == 4) {
+                    list.innerHTML = `Your Final Score is  ${score}/5`;
+                }
+            }
+        });
+        function next() {
+            list.innerHTML = "";
+            list2.innerHTML = "";
+            para.innerHTML = "";
+            i++;
+            list.innerHTML = quiz[i].question;
+
+            quiz[i].solution.map((s) => {
+                const li = document.createElement("li");
+                li.textContent = s;
+                list2.appendChild(li);
+                li.addEventListener("click", () => {
+                    event.target.style.backgroundColor = "brown";
+                    v = li.textContent;
+                });
+            });
+        }
+    </script>
+</html>
